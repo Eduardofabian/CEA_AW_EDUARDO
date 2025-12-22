@@ -1,10 +1,13 @@
 with source as (
-    select * from {{ source('ad_works', 'salesorderheader') }}
+    select * from {{ source('ad_works', 'sales_salesorderheader') }}
 )
 
 , renamed as (
     select
-        cast(salesorderid as int) as sales_order_id
+        --PK
+        {{ dbt_utils.generate_surrogate_key(['salesorderid']) }} as sales_order_sk
+        ---
+        , cast(salesorderid as int) as sales_order_id
         , cast(customerid as int) as customer_id
         , cast(salespersonid as int) as salesperson_id
         , cast(territoryid as int) as territory_id
