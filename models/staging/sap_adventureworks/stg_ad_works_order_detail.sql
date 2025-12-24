@@ -5,11 +5,14 @@ with source as (
 , renamed as (
     select
         -- PK
-        {{ dbt_utils.generate_surrogate_key(['customerid']) }} as customer_sk
-        , cast(customerid as int) as customer_id
-        , cast(personid as int) as person_id
-        , cast(storeid as int) as store_id
-        , cast(territoryid as int) as territory_id
+        {{ dbt_utils.generate_surrogate_key(['salesorderid']) }} as customer_sk
+        , cast(salesorderid as int) as sales_order_id
+        , cast(salesorderdetailid as int) as order_detail_id
+        , cast(orderqty as int) as order_qty
+        , cast(productid as int) as product_id
+        , cast(specialofferid as int) as specialoffer_id
+        , cast(unitprice as int) as unitprice
+        , cast(unitpricediscount as int) as unit_price_discount
         , cast(modifieddate as timestamp) as modified_date
     from source
 )
