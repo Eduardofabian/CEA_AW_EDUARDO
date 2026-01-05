@@ -112,5 +112,22 @@ sources:
             tests:
               - unique
               - not_null
+      # Inventory 
+      - name: production_productinventory
+        description: "Estoque de produtos"
+        columns:
+          - name: productid
+          - name: quantity
+      # Purchasing 
+      - name: purchasing_productvendor
+        description: "Tabela de ligação Produto-Fornecedor"
+        columns:
+          - name: productid
+          - name: businessentityid
+      - name: purchasing_vendor
+        description: "Nomes dos Fornecedores"
+        columns:
+          - name: businessentityid
+          - name: name
 
 
