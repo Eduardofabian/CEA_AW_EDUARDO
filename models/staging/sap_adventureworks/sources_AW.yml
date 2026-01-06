@@ -90,6 +90,9 @@ sources:
             tests:
               - unique
               - not_null
+          - name: jobtitle
+          - name: nationalidnumber
+          - name: currentflag
       - name: person_businessentitycontact
         description: "Ligação entre uma empresa e seus contatos"
         columns:
