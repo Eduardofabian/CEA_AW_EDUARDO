@@ -90,6 +90,23 @@ sources:
             tests:
               - unique
               - not_null
+      - name: person_businessentitycontact
+        description: "Ligação entre uma empresa e seus contatos"
+        columns:
+          - name: businessentityid
+            tests:
+              - not_null          
+          - name: personid
+            tests:
+              - not_null
+      - name: person_businessentityaddress
+        description: "Ligação entre Pessoas/Empresas e Endereços"
+        columns:
+          - name: businessentityid
+            tests:
+              - not_null
+          - name: addressid
+          - name: addresstypeid
       # products
       - name: production_product
         description: "produtos"
