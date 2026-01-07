@@ -6,6 +6,10 @@ with customers as (
     select *
     from {{ ref('stg_ad_works_person') }}
 )
+, person_phone as (
+    select *
+    from {{ ref('stg_ad_works_personphone') }}
+)
 , address as (
     select * from {{ ref('stg_ad_works_address') }}
 )
@@ -16,7 +20,7 @@ with customers as (
     select * from {{ ref('stg_ad_works_country_region') }}
 )
 , business_entity_address as (
-    select * from {{ ref('stg_ad_works_businessentityaddress') }} -- Criamos esta na etapa anterior!
+    select * from {{ ref('stg_ad_works_businessentityaddress') }}
 )
 
 , joined as (
@@ -25,13 +29,19 @@ with customers as (
         , customers.customer_id
         , customers.person_id
         , person.full_name as customer_name
+        , person_phone.phone_number as customer_phone
         , address.city as customer_city
         , state_province.state_name as customer_region
         , country_region.country_name as customer_country
-        
         , customers.store_id
+        , row_number() over (
+            partition by customers.customer_id 
+            order by person_phone.phone_number_type_id asc
+          ) as rn_phone
     from customers
     left join person on customers.person_id = person.business_entity_id
+    left join person_phone 
+        on person.business_entity_id = person_phone.business_entity_id
     left join business_entity_address 
         on person.business_entity_id = business_entity_address.business_entity_id
     left join address 
@@ -43,3 +53,4 @@ with customers as (
 )
 
 select * from joined
+where rn_phone = 1

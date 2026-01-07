@@ -1,6 +1,16 @@
 with source as (
     select *
-    from {{ ref('int_sales_reasons_joined') }}
+    from {{ ref('stg_ad_works_salesreason') }}
 )
 
-select * from source
+, final as (
+    select
+        {{ dbt_utils.generate_surrogate_key(['sales_reason_id']) }} as sk_sales
+        
+        , sales_reason_id
+        , reason_name as sales_reason_name
+        , reason_type
+    from source
+)
+
+select * from final

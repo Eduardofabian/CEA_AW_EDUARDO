@@ -83,6 +83,12 @@ sources:
             tests:
               - unique
               - not_null
+      - name: person_personphone
+        description: "Telefones das pessoas"
+        columns:
+          - name: businessentityid
+          - name: phonenumber
+          - name: phonenumbertypeid
       - name: humanresources_employee
         description: "Rh data"
         columns:
