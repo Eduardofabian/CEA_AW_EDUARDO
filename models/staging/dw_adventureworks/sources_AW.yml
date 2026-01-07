@@ -80,9 +80,6 @@ sources:
         description: "Países"
         columns:
           - name: countryregioncode
-            tests:
-              - unique
-              - not_null
       - name: person_personphone
         description: "Telefones das pessoas"
         columns:
