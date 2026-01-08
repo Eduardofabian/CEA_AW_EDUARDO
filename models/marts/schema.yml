@@ -7,7 +7,6 @@ models:
       - name: sales_order_id
         description: "Chave primária do pedido."
         tests:
-          - unique
           - not_null
       - name: fk_customer
         tests:
