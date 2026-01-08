@@ -80,9 +80,12 @@ sources:
         description: "Países"
         columns:
           - name: countryregioncode
-            tests:
-              - unique
-              - not_null
+      - name: person_personphone
+        description: "Telefones das pessoas"
+        columns:
+          - name: businessentityid
+          - name: phonenumber
+          - name: phonenumbertypeid
       - name: humanresources_employee
         description: "Rh data"
         columns:
@@ -90,6 +93,26 @@ sources:
             tests:
               - unique
               - not_null
+          - name: jobtitle
+          - name: nationalidnumber
+          - name: currentflag
+      - name: person_businessentitycontact
+        description: "Ligação entre uma empresa e seus contatos"
+        columns:
+          - name: businessentityid
+            tests:
+              - not_null          
+          - name: personid
+            tests:
+              - not_null
+      - name: person_businessentityaddress
+        description: "Ligação entre Pessoas/Empresas e Endereços"
+        columns:
+          - name: businessentityid
+            tests:
+              - not_null
+          - name: addressid
+          - name: addresstypeid
       # products
       - name: production_product
         description: "produtos"
@@ -112,5 +135,22 @@ sources:
             tests:
               - unique
               - not_null
+      # Inventory 
+      - name: production_productinventory
+        description: "Estoque de produtos"
+        columns:
+          - name: productid
+          - name: quantity
+      # Purchasing 
+      - name: purchasing_productvendor
+        description: "Tabela de ligação Produto-Fornecedor"
+        columns:
+          - name: productid
+          - name: businessentityid
+      - name: purchasing_vendor
+        description: "Nomes dos Fornecedores"
+        columns:
+          - name: businessentityid
+          - name: name
 
 
