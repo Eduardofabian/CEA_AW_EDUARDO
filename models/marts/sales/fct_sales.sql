@@ -30,13 +30,11 @@ dim_reasons as (
         , employees.employee_sk as fk_employees
         , products.product_sk as fk_product
         , locations.address_sk as fk_locations 
+        , dates.sk_date as fk_order_date
         , credit_card.sk_credit_card as fk_credit_card
         , dim_reasons.sk_sales as fk_sales 
-        , dates.sk_date as fk_order_date
         , orders.status as order_status
         , orders.sales_channel
-        , coalesce(credit_card.card_type, 'Outros Métodos') as credit_card_name 
-        , coalesce(dim_reasons.sales_reason_name, 'Não Informado') as sales_reason_name
         , orders.order_qty
         , orders.unit_price
         , orders.unit_price_discount
@@ -55,9 +53,9 @@ dim_reasons as (
     left join dates 
         on orders.order_date = dates.date_day
     left join credit_card 
-        on orders.credit_card_id = credit_card.credit_card_id    
+        on coalesce(orders.credit_card_id, -1) = credit_card.credit_card_id    
     left join dim_reasons
-        on orders.sales_reason_id = dim_reasons.sales_reason_id 
+        on coalesce(orders.sales_reason_id, -1) = dim_reasons.sales_reason_id 
 )
 
 select * from final
