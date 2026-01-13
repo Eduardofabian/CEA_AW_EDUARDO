@@ -36,7 +36,7 @@ best_reason_id as (
         h.sales_reason_id,     
         row_number() over (
             partition by h.sales_order_id 
-            order by case when r.reason_type = 'Promotion' then 1 else 2 end -- Era reasontype
+            order by case when r.reason_type = 'Promotion' then 1 else 2 end 
         ) as rn
     from header_sales_reason h
     left join sales_reason r on h.sales_reason_id = r.sales_reason_id
