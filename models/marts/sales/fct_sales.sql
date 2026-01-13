@@ -19,19 +19,8 @@ dates as (
 credit_card as (
     select * from {{ ref('dim_credit_card') }}
 ),
-sales_reasons as (
-    select * from {{ ref('int_sales_reasons_joined') }}
-),
 dim_reasons as (
     select * from {{ ref('dim_sales_reason') }}
-)
-
-, first_reason_per_order as (
-    select
-        sales_order_id
-        , sales_reason_id
-    from sales_reasons
-    qualify row_number() over (partition by sales_order_id order by sales_reason_id) = 1
 )
 
 , final as (
@@ -42,9 +31,12 @@ dim_reasons as (
         , products.product_sk as fk_product
         , locations.address_sk as fk_locations 
         , credit_card.sk_credit_card as fk_credit_card
-        , dates.sk_date as fk_order_date
         , dim_reasons.sk_sales as fk_sales 
+        , dates.sk_date as fk_order_date
         , orders.status as order_status
+        , orders.sales_channel
+        , coalesce(credit_card.card_type, 'Outros Métodos') as credit_card_name 
+        , coalesce(dim_reasons.sales_reason_name, 'Não Informado') as sales_reason_name
         , orders.order_qty
         , orders.unit_price
         , orders.unit_price_discount
@@ -60,14 +52,12 @@ dim_reasons as (
         on orders.salesperson_id = employees.employee_id
     left join locations
         on orders.address_id = locations.address_id
-    left join credit_card 
-        on orders.credit_card_id = credit_card.credit_card_id    
     left join dates 
         on orders.order_date = dates.date_day
-    left join first_reason_per_order
-        on orders.sales_order_id = first_reason_per_order.sales_order_id
+    left join credit_card 
+        on orders.credit_card_id = credit_card.credit_card_id    
     left join dim_reasons
-        on first_reason_per_order.sales_reason_id = dim_reasons.sales_reason_id 
+        on orders.sales_reason_id = dim_reasons.sales_reason_id 
 )
 
 select * from final
