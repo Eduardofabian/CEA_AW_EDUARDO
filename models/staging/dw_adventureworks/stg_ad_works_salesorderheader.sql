@@ -1,31 +1,34 @@
 with source as (
     select * from {{ source('ad_works', 'sales_salesorderheader') }}
-)
+),
 
-, renamed as (
+renamed as (
     select
-        --PK
-        {{ dbt_utils.generate_surrogate_key(['salesorderid']) }} as sales_order_sk
-        ---
-        , cast(salesorderid as int) as sales_order_id
-        , cast(customerid as int) as customer_id
-        , cast(salespersonid as int) as salesperson_id
-        , cast(territoryid as int) as territory_id
-        , cast(billtoaddressid as int) as bill_to_address_id
-        , cast(shiptoaddressid as int) as ship_to_address_id
-        , cast(creditcardid as int) as credit_card_id
-        , cast(orderdate as timestamp) as order_date
-        , cast(duedate as timestamp) as due_date
-        , cast(shipdate as timestamp) as ship_date
-        , cast(status as int) as status
-        , cast(onlineorderflag as boolean) as is_online_order
-        , cast(purchaseordernumber as string) as purchase_order_number
-        , cast(accountnumber as string) as account_number
-        , cast(subtotal as float) as subtotal
-        , cast(taxamt as float) as tax_amount
-        , cast(freight as float) as freight
-        , cast(totaldue as float) as total_due
-        , cast(modifieddate as timestamp) as modified_date
+        salesorderid as sales_order_id,
+        revisionnumber as revision_number,
+        orderdate as order_date,
+        duedate as due_date,
+        shipdate as ship_date,
+        status,
+        onlineorderflag, 
+        purchaseordernumber as purchase_order_number,
+        accountnumber as account_number,
+        customerid as customer_id,
+        salespersonid as salesperson_id,
+        territoryid as territory_id,
+        billtoaddressid as bill_to_address_id,
+        shiptoaddressid as ship_to_address_id,
+        shipmethodid as ship_method_id,
+        creditcardid as credit_card_id,
+        creditcardapprovalcode as credit_card_approval_code,
+        currencyrateid as currency_rate_id,
+        subtotal as sub_total,
+        taxamt as tax_amt,
+        freight,
+        totaldue as total_due,
+        comment,
+        rowguid,
+        modifieddate as modified_date
     from source
 )
 

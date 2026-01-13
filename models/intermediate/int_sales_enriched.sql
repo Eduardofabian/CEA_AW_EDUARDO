@@ -8,6 +8,7 @@ with order_header as (
         , order_date
         , ship_date
         , status
+        , onlineorderflag
     from {{ ref('stg_ad_works_salesorderheader') }} 
 ),
 
@@ -22,6 +23,25 @@ order_detail as (
     from {{ ref('stg_ad_works_order_detail') }} 
 ),
 
+header_sales_reason as (
+    select * from {{ ref('stg_ad_works_salesorderheadersalesreason') }}
+),
+
+sales_reason as (
+    select * from {{ ref('stg_ad_works_salesreason') }}
+),
+best_reason_id as (
+    select 
+        h.sales_order_id,      
+        h.sales_reason_id,     
+        row_number() over (
+            partition by h.sales_order_id 
+            order by case when r.reason_type = 'Promotion' then 1 else 2 end -- Era reasontype
+        ) as rn
+    from header_sales_reason h
+    left join sales_reason r on h.sales_reason_id = r.sales_reason_id
+),
+
 joined as (
     select 
         order_header.sales_order_id
@@ -34,12 +54,18 @@ joined as (
         , order_header.order_date
         , order_header.ship_date
         , order_header.status
+        , case 
+            when order_header.onlineorderflag = true then 'Online'
+            else 'Revenda'
+        end as sales_channel
+        , best_reason_id.sales_reason_id
         , order_detail.order_qty
         , order_detail.unit_price
         , order_detail.unit_price_discount
 
     from order_header
     left join order_detail on order_header.sales_order_id = order_detail.sales_order_id
+    left join best_reason_id on order_header.sales_order_id = best_reason_id.sales_order_id and best_reason_id.rn = 1
 )
 
 select * from joined
