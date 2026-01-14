@@ -54,6 +54,15 @@ sources:
           - name: salesreasonid
             tests:
               - not_null
+      - name: sales_store
+        description: "Tabela de Lojas (Revendas)"
+        columns:
+          - name: businessentityid
+            tests:
+              - unique
+              - not_null
+          - name: name
+            description: "Nome da Loja"
       # Person 
       - name: person_person
         description: "pessoas"

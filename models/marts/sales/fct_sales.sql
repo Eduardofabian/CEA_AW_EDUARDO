@@ -45,9 +45,9 @@ dim_reasons as (
     left join products 
         on orders.product_id = products.product_id
     left join customers    
-        on orders.customer_id = customers.id_customer
+        on coalesce(orders.customer_id, -1) = customers.id_customer
     left join employees
-        on orders.salesperson_id = employees.employee_id
+        on coalesce(orders.salesperson_id, -1) = employees.employee_id
     left join locations
         on orders.address_id = locations.address_id
     left join dates 
