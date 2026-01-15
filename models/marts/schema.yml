@@ -9,9 +9,11 @@ models:
         tests:
           - not_null
       - name: fk_customer
+        description: "Chave estrangeira para dimensão clientes."
         tests:
           - not_null
       - name: fk_product
+        description: "Chave estrangeira para dimensão produtos."
         tests:
           - not_null
       - name: gross_amount
@@ -21,6 +23,7 @@ models:
     description: "Dimensão de Clientes."
     columns:
       - name: sk_customer
+        description: "Chave substituta (Surrogate Key) do cliente."
         tests:
           - unique
           - not_null
@@ -29,6 +32,7 @@ models:
     description: "Dimensão de Produtos."
     columns:
       - name: product_sk
+        description: "Chave substituta (Surrogate Key) do produto."
         tests:
           - unique
           - not_null
@@ -37,6 +41,7 @@ models:
     description: "Dimensão de Motivos de Venda."
     columns:
       - name: sk_sales
+        description: "Chave substituta (Surrogate Key) do motivo de venda."
         tests:
           - unique
           - not_null
